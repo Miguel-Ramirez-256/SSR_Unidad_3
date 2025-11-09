@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    public function reviews() { return $this->hasMany(Review::class); }
-    public function getRouteKeyName() { return 'slug'; }
+
+    protected $fillable = [
+        'title',
+        'description',
+        'instructor',
+        'price',
+    ];
 }

@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Course;
+use Illuminate\Http\Request;
 
 class PublicCourseController extends Controller
 {
-    public function index() {
-    $courses = Course::latest()->paginate(10);
-    return view('home', compact('courses'));
-}
-public function show(Course $course) {
-    $course->load('reviews.user'); // EAGER LOADING crítico
-    return view('courses.show', compact('course'));
-}
+    // Página principal: lista de cursos
+    public function index()
+    {
+        // Cargar los cursos ordenados por fecha y paginados
+        $courses = Course::latest()->paginate(10);
 
-}
+        // Retornar la vista SSR (home.blade.php)
+        return view('home', compact('courses'));
+    }
 
+    // Página de detalle del curso
+    public function show(Course $course)
+    {
+        // Eager Loading: cargar reseñas y usuarios en una sola consulta
+        $course->load('reviews.user');
+
+        // Retornar la vista SSR (courses/show.blade.php)
+        return view('courses.show', compact('course'));
+    }
+}

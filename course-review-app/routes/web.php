@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\PublicCourseController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +16,6 @@ use App\Http\Controllers\PublicCourseController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -36,5 +33,9 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/', [PublicCourseController::class, 'index'])->name('home');
 Route::get('/curso/{course}', [PublicCourseController::class, 'show'])->name('courses.show');
+
+Route::post('/curso/{course}/reviews', [ReviewController::class, 'store'])
+     ->name('reviews.store')->middleware('auth');
+
 
 require __DIR__.'/auth.php';

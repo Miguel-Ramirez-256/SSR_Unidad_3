@@ -8,58 +8,74 @@ use Illuminate\Http\Request;
 class CourseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar lista de cursos (solo para administrador).
      */
     public function index()
     {
-        //
+        $courses = Course::latest()->paginate(10);
+        return view('courses.index', compact('courses'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostrar formulario para crear curso.
      */
     public function create()
     {
-        //
+        return view('courses.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guardar curso nuevo en la base de datos.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'instructor' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        Course::create($request->all());
+
+        return redirect()->route('courses.index')
+            ->with('success', 'Curso creado correctamente.');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Course $course)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Mostrar formulario de edición.
      */
     public function edit(Course $course)
     {
-        //
+        return view('courses.edit', compact('course'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar curso existente.
      */
     public function update(Request $request, Course $course)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'instructor' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $course->update($request->all());
+
+        return redirect()->route('courses.index')
+            ->with('success', 'Curso actualizado correctamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar curso.
      */
     public function destroy(Course $course)
     {
-        //
+        $course->delete();
+
+        return redirect()->route('courses.index')
+            ->with('success', 'Curso eliminado correctamente.');
     }
 }
