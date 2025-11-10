@@ -8,16 +8,16 @@ class StoreCourseRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return true; // Permitimos a cualquier usuario autenticado crear cursos
     }
 
     public function rules(): array
     {
         return [
             'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:courses,slug',
             'description' => 'required|string',
             'instructor' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
         ];
     }
 }
