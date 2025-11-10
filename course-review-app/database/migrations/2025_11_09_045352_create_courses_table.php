@@ -10,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
+            $table->string('title'); // Título del curso
+            $table->string('instructor'); // Nombre del instructor o creador del curso
+            $table->text('description')->nullable(); // Descripción opcional
+            $table->string('video_url')->nullable(); // URL del video (YouTube, etc.)
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relación con el usuario creador
+            $table->timestamps(); // created_at y updated_at
         });
     }
-
 
     public function down(): void
     {

@@ -1,75 +1,65 @@
-{{-- resources/views/courses/show.blade.php --}}
 <x-app-layout>
-    <div class="max-w-4xl mx-auto p-6">
-        {{-- Título del curso --}}
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             {{ $course->title }}
-        </h1>
-
-        {{-- Descripción del curso --}}
-        <p class="text-gray-700 text-lg mb-6">
-            {{ $course->description ?? 'Sin descripción disponible.' }}
-        </p>
-
-        <hr class="my-6">
-
-        {{-- Reseñas --}}
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">
-            Reseñas de este curso
         </h2>
+    </x-slot>
 
-        @if($course->reviews->count() > 0)
-            <div class="space-y-4">
-                @foreach($course->reviews as $review)
-                    <div class="bg-white border border-gray-200 shadow rounded-lg p-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <p class="font-semibold text-gray-800">
-                                {{ $review->user->name }}
-                            </p>
-                            <span class="text-yellow-500">
-                                ⭐ {{ $review->rating }}/5
-                            </span>
-                        </div>
-                        <p class="text-gray-700">{{ $review->comment }}</p>
-                    </div>
-                @endforeach
+    <div class="py-6 max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+
+            {{-- Mensaje de éxito --}}
+            @if (session('success'))
+                <div class="mb-4 text-green-600 font-semibold">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Título --}}
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ $course->title }}</h1>
+
+            {{-- Instructor --}}
+            <p class="text-gray-600 mb-4">
+                <strong>Instructor:</strong> {{ $course->instructor }}
+            </p>
+
+            {{-- Descripción --}}
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Descripción</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    {{ $course->description }}
+                </p>
             </div>
-        @else
-            <p class="text-gray-500">Aún no hay reseñas para este curso.</p>
-        @endif
 
-        {{-- Zona para Fase 4: formulario de reseña (solo autenticados) --}}
-        @auth
-            <hr class="my-6">
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">Deja tu reseña</h3>
-            <form action="{{ route('reviews.store', $course) }}" method="POST" class="space-y-4">
-                @csrf
-
-                {{-- Calificación --}}
-                <div>
-                    <label for="rating" class="block font-medium text-gray-700">Calificación (1 a 5)</label>
-                    <input type="number" name="rating" id="rating" min="1" max="5" required
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            {{-- Video (si existe) --}}
+            @if($course->video_url)
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Video del curso</h3>
+                    <div class="aspect-w-16 aspect-h-9">
+                        <iframe 
+                            class="w-full h-96 rounded-md border"
+                            src="{{ str_replace('watch?v=', 'embed/', $course->video_url) }}"
+                            title="Video del curso"
+                            frameborder="0"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
                 </div>
+            @endif
 
-                {{-- Comentario --}}
-                <div>
-                    <label for="comment" class="block font-medium text-gray-700">Comentario</label>
-                    <textarea name="comment" id="comment" rows="3" required
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                </div>
+            {{-- Botones --}}
+            <div class="flex justify-between mt-8">
+                <a href="{{ route('dashboard') }}" class="text-gray-600 hover:underline">
+                    ← Volver al panel
+                </a>
 
-                <x-primary-button>Enviar reseña</x-primary-button>
-            </form>
-        @endauth
+                @can('update', $course)
+                    <a href="{{ route('courses.edit', $course->id) }}" class="text-blue-600 font-semibold hover:underline">
+                        ✏️ Editar curso
+                    </a>
+                @endcan
+            </div>
 
-        @auth
-        <form method="POST" action="{{ route('reviews.store', $course) }}">
-            @csrf
-            <!-- input rating, textarea comment -->
-            </form>
-            @else
-            <a href="{{ route('login') }}">Inicia sesión para dejar una reseña</a>
-            @endauth
+        </div>
     </div>
 </x-app-layout>

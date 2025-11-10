@@ -1,44 +1,65 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            {{ __('Editar Curso') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <h1>Editar Curso</h1>
+    <div class="py-6 max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+            {{-- Mensaje de éxito --}}
+            @if (session('success'))
+                <div class="mb-4 text-green-600 font-semibold">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    <form method="POST" action="{{ route('courses.update', $course->id) }}">
-        @csrf
-        @method('PUT')
+            {{-- Formulario para editar curso --}}
+            <form method="POST" action="{{ route('courses.update', $course->id) }}">
+                @csrf
+                @method('PUT')
 
-        <div class="mb-3">
-            <label for="title" class="form-label">Título</label>
-            <input type="text" name="title" id="title"
-                value="{{ old('title', $course->title) }}"
-                class="form-control @error('title') is-invalid @enderror" required>
-            @error('title')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+                {{-- Título --}}
+                <div>
+                    <x-input-label for="title" value="Título del curso" />
+                    <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" 
+                        value="{{ old('title', $course->title) }}" required autofocus />
+                    <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                </div>
+
+                {{-- Descripción --}}
+                <div class="mt-4">
+                    <x-input-label for="description" value="Descripción" />
+                    <textarea id="description" name="description" class="mt-1 block w-full border-gray-300 rounded-md" rows="4" required>{{ old('description', $course->description) }}</textarea>
+                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                </div>
+
+                {{-- Instructor --}}
+                <div class="mt-4">
+                    <x-input-label for="instructor" value="Instructor" />
+                    <x-text-input id="instructor" name="instructor" type="text" class="mt-1 block w-full" 
+                        value="{{ old('instructor', $course->instructor) }}" required />
+                    <x-input-error :messages="$errors->get('instructor')" class="mt-2" />
+                </div>
+
+                {{-- URL del video --}}
+                <div class="mt-4">
+                    <x-input-label for="video_url" value="URL del video (opcional)" />
+                    <x-text-input id="video_url" name="video_url" type="url" class="mt-1 block w-full" 
+                        placeholder="https://www.youtube.com/watch?v=XXXXX"
+                        value="{{ old('video_url', $course->video_url) }}" />
+                    <x-input-error :messages="$errors->get('video_url')" class="mt-2" />
+                </div>
+
+                {{-- Botones --}}
+                <div class="mt-6 flex justify-between">
+                    <a href="{{ route('dashboard') }}" class="text-gray-600 hover:underline">
+                        ← Volver al panel
+                    </a>
+
+                    <x-primary-button>Actualizar Curso</x-primary-button>
+                </div>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Descripción</label>
-            <textarea name="description" id="description" rows="4"
-                class="form-control @error('description') is-invalid @enderror" required>{{ old('description', $course->description) }}</textarea>
-            @error('description')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-3">
-            <label for="price" class="form-label">Precio</label>
-            <input type="number" name="price" id="price" step="0.01"
-                value="{{ old('price', $course->price) }}"
-                class="form-control @error('price') is-invalid @enderror" required>
-            @error('price')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <button type="submit" class="btn btn-primary">Actualizar</button>
-        <a href="{{ route('courses.index') }}" class="btn btn-secondary">Cancelar</a>
-    </form>
-</div>
-@endsection
+    </div>
+</x-app-layout>

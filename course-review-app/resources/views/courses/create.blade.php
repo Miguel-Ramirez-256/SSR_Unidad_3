@@ -17,21 +17,15 @@
                 </div>
 
                 <div class="mt-4">
-                    <x-input-label for="slug" value="Slug (URL amigable)" />
-                    <x-text-input id="slug" name="slug" type="text" class="mt-1 block w-full" required />
-                    <x-input-error :messages="$errors->get('slug')" class="mt-2" />
-                </div>
-
-                <div class="mt-4">
                     <x-input-label for="description" value="Descripción" />
                     <textarea id="description" name="description" class="mt-1 block w-full border-gray-300 rounded-md" rows="4" required></textarea>
                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
                 <div class="mt-4">
-                    <x-input-label for="instructor" value="Instructor" />
-                    <x-text-input id="instructor" name="instructor" type="text" class="mt-1 block w-full" required />
-                    <x-input-error :messages="$errors->get('instructor')" class="mt-2" />
+                    <x-input-label for="video_url" value="URL del video (opcional)" />
+                    <x-text-input id="video_url" name="video_url" type="url" class="mt-1 block w-full" placeholder="https://www.youtube.com/..." />
+                    <x-input-error :messages="$errors->get('video_url')" class="mt-2" />
                 </div>
 
                 <div class="mt-6">
