@@ -54,4 +54,9 @@
             </a>
         </p>
     </div>
+    <div class="mt-4 text-center">
+    <a href="{{ route('public.courses') }}" class="text-blue-600 hover:underline">
+        Ver cursos sin iniciar sesión
+    </a>
+</div>
 </x-guest-layout>

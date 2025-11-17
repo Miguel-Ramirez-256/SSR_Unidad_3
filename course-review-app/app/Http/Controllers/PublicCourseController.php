@@ -7,23 +7,28 @@ use Illuminate\Http\Request;
 
 class PublicCourseController extends Controller
 {
-    // Página principal: lista de cursos
+    /**
+     * Mostrar la lista pública de cursos (SSR)
+     */
     public function index()
     {
-        // Cargar los cursos ordenados por fecha y paginados
-        $courses = Course::latest()->paginate(10);
+        $courses = Course::with('user')
+            ->latest()
+            ->paginate(10);
 
-        // Retornar la vista SSR (home.blade.php)
         return view('home', compact('courses'));
     }
 
-    // Página de detalle del curso
+    /**
+     * Mostrar el detalle público de un curso (usando SLUG)
+     */
     public function show(Course $course)
     {
-        // Eager Loading: cargar reseñas y usuarios en una sola consulta
-        $course->load('reviews.user');
+        // Cargar las reseñas con su usuario
+        $course->load(['reviews.user' => function($q) {
+            $q->latest();
+        }]);
 
-        // Retornar la vista SSR (courses/show.blade.php)
         return view('courses.show', compact('course'));
     }
 }

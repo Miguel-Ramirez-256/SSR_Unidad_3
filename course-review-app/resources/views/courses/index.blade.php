@@ -30,13 +30,22 @@
                         <td>{{ $course->title }}</td>
                         <td>{{ $course->instructor }}</td>
                         <td>${{ number_format($course->price, 2) }}</td>
-                        <td>
+                        <td class="d-flex justify-content-center gap-2">
+
+                            {{-- 🔵 Ver detalles públicos (reseñas, información, video) --}}
+                            <a href="{{ route('public.courses.show', $course->id) }}"
+                               class="text-blue-600 hover:underline">
+                                👁️ Ver detalles
+                            </a>
+
+                            {{-- ✏️ Editar --}}
                             <a href="{{ route('courses.edit', $course) }}"
                                class="btn btn-sm"
                                style="background-color: #ffc107; color: #000; font-weight: 600;">
                                 ✏️ Editar
                             </a>
 
+                            {{-- 🗑️ Eliminar --}}
                             <form action="{{ route('courses.destroy', $course) }}"
                                   method="POST"
                                   style="display:inline;">
@@ -48,6 +57,7 @@
                                     🗑️ Eliminar
                                 </button>
                             </form>
+
                         </td>
                     </tr>
                 @empty

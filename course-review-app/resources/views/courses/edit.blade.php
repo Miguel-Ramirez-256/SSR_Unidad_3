@@ -34,14 +34,6 @@
                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
-                {{-- Instructor --}}
-                <div class="mt-4">
-                    <x-input-label for="instructor" value="Instructor" />
-                    <x-text-input id="instructor" name="instructor" type="text" class="mt-1 block w-full" 
-                        value="{{ old('instructor', $course->instructor) }}" required />
-                    <x-input-error :messages="$errors->get('instructor')" class="mt-2" />
-                </div>
-
                 {{-- URL del video --}}
                 <div class="mt-4">
                     <x-input-label for="video_url" value="URL del video (opcional)" />
