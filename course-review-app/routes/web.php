@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\PublicCourseController;
 use App\Http\Controllers\ReviewController;
-use App\Models\Course;
+use App\Models\Course; 
 
 /*
 |--------------------------------------------------------------------------
@@ -37,15 +37,14 @@ Route::get('/cursos/{course}', [PublicCourseController::class, 'show'])
 
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard del usuario autenticado
+    // Dashboard — mostrar TODOS los cursos
     Route::get('/dashboard', function () {
-        $courses = Course::with('user')
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+    // traer todos los cursos con su autor para mostrar quién creó cada uno
+        $courses = \App\Models\Course::with('user')->latest()->get();
 
         return view('dashboard', compact('courses'));
-    })->name('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+
 
     // Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -64,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Guardar reseña
     Route::post('/courses/{course}/reviews', [ReviewController::class, 'store'])
+    ->middleware('auth')
     ->name('reviews.store');
 
     // Eliminar reseña

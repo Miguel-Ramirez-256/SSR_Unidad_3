@@ -16,27 +16,36 @@
                         <h2 class="text-xl font-semibold text-gray-900">
                             {{ $course->title }}
                         </h2>
-
-                        {{-- Instructor --}}
+                    
                         <p class="text-sm text-gray-700 mt-1">
                             <strong>Instructor:</strong>
-                            {{ $course->instructor }}
+                            {{ $course->user->name ?? 'Desconocido' }}
                         </p>
 
-                        {{-- Descripción resumida --}}
                         <p class="text-gray-600 mt-2">
-                            {{ Str::limit($course->description, 120) }}
+                            {{ \Illuminate\Support\Str::limit($course->description, 120) }}
                         </p>
 
-                        {{-- Botón Ver Detalles (USANDO SLUG) --}}
-                        <a href="{{ route('public.courses.show', $course->id) }}" 
-                            class="text-blue-600 hover:underline mt-3 inline-block">
-                            Ver detalles
-                        </a>
+                        <div class="mt-3 flex items-center space-x-4">
+                            <a href="{{ route('public.courses.show', $course->id) }}"
+                                class="text-blue-600 hover:underline inline-block">
+                                    📖 Ver detalles
+                            </a>
 
+                        @if($course->video_url)
+                            <a href="{{ $course->video_url }}" target="_blank" class="text-sm hover:underline inline-block">
+                                📺 Ver video
+                            </a>
+                        @endif
+                    </div>
                     </div>
                 @endforeach
+            </div>
 
+            <div class="flex items-center justify-between mb-6">
+                @guest
+                <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Volver al login</a>
+                @endguest
             </div>
 
             {{-- Paginación --}}
