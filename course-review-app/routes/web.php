@@ -40,7 +40,11 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard — mostrar TODOS los cursos
     Route::get('/dashboard', function () {
     // traer todos los cursos con su autor para mostrar quién creó cada uno
-        $courses = \App\Models\Course::with('user')->latest()->get();
+        $courses = \App\Models\Course::with('user')
+        ->withAvg('reviews', 'rating')
+        ->withCount('reviews')
+        ->latest()
+        ->get();
 
         return view('dashboard', compact('courses'));
     })->middleware(['auth', 'verified'])->name('dashboard');

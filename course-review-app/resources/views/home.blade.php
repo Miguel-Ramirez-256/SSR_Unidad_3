@@ -16,6 +16,18 @@
                         <h2 class="text-xl font-semibold text-gray-900">
                             {{ $course->title }}
                         </h2>
+
+                        {{-- PROMEDIO DEL CURSO --}}
+                        @if ($course->reviews_avg_rating)
+                            <p class="text-yellow-600 font-semibold">
+                                ⭐ {{ number_format($course->reviews_avg_rating, 1) }} / 5
+                                ({{ $course->reviews_count ?? $course->reviews->count() }} reseñas)
+                            </p>
+                        @else
+                            <p class="text-gray-500">
+                                ⭐ Sin reseñas todavía
+                            </p>
+                        @endif
                     
                         <p class="text-sm text-gray-700 mt-1">
                             <strong>Instructor:</strong>
